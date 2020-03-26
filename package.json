@@ -8,7 +8,11 @@
     "@testing-library/user-event": "^7.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "unirest": "^0.6.0",
+    "vis-graph3d": "^5.7.2",
+    "vis-network": "^7.4.0",
+    "whatwg-fetch": "^3.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
