@@ -1,0 +1,33 @@
+.main {
+    margin: 2em;
+    padding: 2em;
+    background-color: #fff;
+}
+.main-layout {
+    display: grid;
+    grid-template-columns: 15% 85%;
+    width: 100%;
+}
+li {
+    list-style: none;
+}
+.county-list {
+    /* width: 10em; */
+    height: 43em;
+    overflow: scroll;
+    padding: .5em 1em .5em .5em;
+}
+.counties {
+    text-align: end;
+}
+.counties-container {
+    /* width: 12em; */
+    border-radius: 15px;
+    border: solid 2px cadetblue;
+}
+.graph-3d {
+    height: 80em;
+}
+/* h2 {
+    text-align: left;
+} */

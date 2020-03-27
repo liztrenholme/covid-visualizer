@@ -14,11 +14,11 @@ export const getData = async (country) => {
       }
     })
       .then(blob => blob.json());
-    return(data.data);
+
+    return(data);
   } catch (e) {
     // eslint-disable-next-line no-console
     console.log(e, 'Error fetching data');
     return(e);
   }
-
 };

@@ -1,0 +1,66 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import Graph from 'vis-react';
+import './network.css';
+import style from 'vis-network/styles/vis-network.css';
+ 
+
+ 
+var events = {
+  select: function(event) {
+    var { nodes, edges } = event;
+  }
+};
+
+class Network extends Component {
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log(nextProps.nodes[0].id, this.props.nodes[0].id);
+    return nextProps.nodes !== this.props.nodes;
+  }
+
+  options = {
+    layout: {
+      hierarchical: false,
+      improvedLayout: this.props.ohioMode
+    },
+    edges: {
+      color: '#000000'
+    },
+    interaction: { hoverEdges: true },
+    height: '800px',
+    nodes: {
+      color: 'skyblue'
+    },
+  };
+  
+  render() {
+    const { data, nodes, edges } = this.props;
+    // console.log(edges);
+    const graph = {
+      nodes: nodes, edges: edges
+    };
+    return (
+      <div className="network">
+        <Graph
+          graph={graph}
+          options={this.options}
+          events={events}
+          style={style}
+          //   getNetwork={this.getNetwork}
+          //   getEdges={this.getEdges}
+          //   getNodes={this.getNodes}
+          vis={vis => (this.vis = vis)}
+        />
+      </div>
+    );
+  }
+}
+
+Network.propTypes = {
+  data: PropTypes.object,
+  nodes: PropTypes.array,
+  edges: PropTypes.array,
+  ohioMode: PropTypes.bool
+};
+export default Network;
