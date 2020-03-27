@@ -28,6 +28,28 @@ li {
 .graph-3d {
     height: 80em;
 }
-/* h2 {
-    text-align: left;
-} */
+.active-button {
+    background-color: cadetblue; 
+    color: white;
+}
+.inactive-button {
+    background-color: white;
+    color: cadetblue;
+}
+.button {
+    width: 8em;
+    border-radius: 15px;
+    border: solid 2px cadetblue;
+}
+@media only screen and (max-width: 800px) {
+    .main-layout {
+        display: grid;
+        grid-template-columns: 100%;
+    }
+    .county-list {
+        height: 10em;
+    }
+    .counties {
+        text-align: left;
+    }
+}

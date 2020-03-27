@@ -28,7 +28,15 @@ class Main extends Component {
     const allEdges = data && data.covid19Stats && data.covid19Stats.length ? data.covid19Stats.map(i => {return({ from: i.province, to: i.keyId });}) : [];
     return (
       <div className="main">
-        <h1>Covid-19 Stats in Ohio</h1>
+        <h1>Covid-19 Stats in Ohio</h1><span>Updated: {data.lastChecked}</span>
+        <div className={ohioMode ? 'active-button button' : 'inactive-button button'}
+          onClick={this.toggleMode}>
+                Ohio
+        </div>
+        <div className={ohioMode ? 'inactive-button button' : 'active-button button'}
+          onClick={this.toggleMode}>
+                All States
+        </div>
         <div className="main-layout">
           <div className="counties-container">
             <h2>Counties</h2>
@@ -42,11 +50,19 @@ class Main extends Component {
             </ul>
           </div>
           <div className="visualizer">
-            {data && data.covid19Stats && data.covid19Stats.length 
+            {data && data.covid19Stats && data.covid19Stats.length
+            && ohioMode
               ? <Network 
                 data={data}
-                nodes={ohioMode ? ohioNodes : allNodes}
-                edges={ohioMode ? ohioEdges : allEdges}
+                nodes={ohioNodes}
+                edges={ohioEdges}
+                ohioMode={ohioMode} /> : null}
+            {data && data.covid19Stats && data.covid19Stats.length
+            && !ohioMode
+              ? <Network 
+                data={data}
+                nodes={allNodes}
+                edges={allEdges}
                 ohioMode={ohioMode} /> : null}
           </div>
           {/* <div className="graph-3d">
