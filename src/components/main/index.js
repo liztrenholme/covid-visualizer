@@ -28,7 +28,7 @@ class Main extends Component {
     const allEdges = data && data.covid19Stats && data.covid19Stats.length ? data.covid19Stats.map(i => {return({ from: i.province, to: i.keyId });}) : [];
     return (
       <div className="main">
-        <h1>Covid-19 Stats in Ohio</h1><span>Updated: {data.lastChecked}</span>
+        <h1>Covid-19 Stats By County</h1><span>Updated: {data.lastChecked}</span>
         <div className={ohioMode ? 'active-button button' : 'inactive-button button'}
           onClick={this.toggleMode}>
                 Ohio
@@ -39,7 +39,7 @@ class Main extends Component {
         </div>
         <div className="main-layout">
           <div className="counties-container">
-            <h2>Counties</h2>
+            <h2>Ohio Counties</h2>
             <ul className="county-list">
               {ohioStats.length ? 
                 ohioStats.map(i => {return(<li key={i.city}>
