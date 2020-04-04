@@ -6,16 +6,15 @@ import style from 'vis-network/styles/vis-network.css';
  
 
  
-var events = {
-  select: function(event) {
-    var { nodes, edges } = event;
-  }
-};
+// var events = {
+//   select: function(event) {
+//     var { nodes, edges } = event;
+//   }
+// };
 
 class Network extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(nextProps.nodes[0].id, this.props.nodes[0].id);
     return nextProps.nodes !== this.props.nodes;
   }
 
@@ -35,8 +34,7 @@ class Network extends Component {
   };
   
   render() {
-    const { data, nodes, edges } = this.props;
-    // console.log(edges);
+    const { nodes, edges } = this.props;
     const graph = {
       nodes: nodes, edges: edges
     };
@@ -45,7 +43,7 @@ class Network extends Component {
         <Graph
           graph={graph}
           options={this.options}
-          events={events}
+          // events={events}
           style={style}
           //   getNetwork={this.getNetwork}
           //   getEdges={this.getEdges}

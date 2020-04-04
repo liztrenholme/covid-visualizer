@@ -19,16 +19,21 @@ class Main extends Component {
   render() {
     const { data, ohioMode } = this.state;
     const ohioStats = data && data.covid19Stats && data.covid19Stats.length ? data.covid19Stats.filter(i => i.province === 'Ohio') : [];
-    const ohioNodes = ohioStats.length ? ohioStats.map(i => {return({ id: i.city, label: `${i.city} ${i.confirmed}` });}).concat([{id: 'Ohio', label: 'Ohio'}]) : [{id: 'Ohio', label: 'Ohio'}];
+    const ohioNodes = ohioStats.length 
+      ? ohioStats.map(i => {return({ id: i.city, label: `${i.city} ${i.confirmed}`, shape: 'circle', color: i.confirmed > 500 ? '#ba4e66' : i.confirmed > 100 ? '#f00' : i.confirmed > 50 ? '#FFFF00' : 'lightblue' });}).concat([{id: 'Ohio', label: 'Ohio'}]) : [{id: 'Ohio', label: 'Ohio'}];
     const ohioEdges = ohioStats.length ? ohioStats.map(i => {return({ from: i.province, to: i.city });}) : [];
 
     const states = data && data.covid19Stats && data.covid19Stats.length ? [...new Set(data.covid19Stats.map(i => {return(i.province);}))] : [];
     const statesArray = states.map(i => {return({id: i, label: i});});
-    const allNodes = data && data.covid19Stats && data.covid19Stats.length ? data.covid19Stats.map(i => {return({ id: i.keyId, label: `${i.city} ${i.confirmed}` });}).concat(statesArray) : [{id: 'Ohio', label: 'Ohio'}];
-    const allEdges = data && data.covid19Stats && data.covid19Stats.length ? data.covid19Stats.map(i => {return({ from: i.province, to: i.keyId });}) : [];
+    const allNodes = data && data.covid19Stats && data.covid19Stats.length 
+      ? data.covid19Stats.map(i => {return({ id: i.keyId, label: `${i.city} ${i.confirmed}`, shape: 'circle', color: i.confirmed > 500 ? '#ba4e66' : i.confirmed > 100 ? '#f00' : i.confirmed > 50 ? '#FFFF00' : 'lightblue' });}).concat(statesArray) : [{id: 'Ohio', label: 'Ohio'}];
+    const allEdges = data && data.covid19Stats && data.covid19Stats.length 
+      ? data.covid19Stats.map(i => {return({ from: i.province, to: i.keyId });}) : [];
+    const dateUpdated = data && data.lastChecked 
+      ? `${data.lastChecked.split('T')[0]}, ${data.lastChecked.split('T')[1].split('.')[0]}` : '';
     return (
       <div className="main">
-        <h1>Covid-19 Stats By County</h1><span>Updated: {data.lastChecked}</span>
+        <h1>Covid-19 Stats By County</h1><span>Updated: {dateUpdated}</span>
         <div className={ohioMode ? 'active-button button' : 'inactive-button button'}
           onClick={this.toggleMode}>
                 Ohio
