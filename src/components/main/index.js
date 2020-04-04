@@ -20,13 +20,13 @@ class Main extends Component {
     const { data, ohioMode } = this.state;
     const ohioStats = data && data.covid19Stats && data.covid19Stats.length ? data.covid19Stats.filter(i => i.province === 'Ohio') : [];
     const ohioNodes = ohioStats.length 
-      ? ohioStats.map(i => {return({ id: i.city, label: `${i.city} ${i.confirmed}`, shape: 'circle', color: i.confirmed > 500 ? '#ba4e66' : i.confirmed > 100 ? '#f00' : i.confirmed > 50 ? '#FFFF00' : 'lightblue' });}).concat([{id: 'Ohio', label: 'Ohio'}]) : [{id: 'Ohio', label: 'Ohio'}];
+      ? ohioStats.map(i => {return({ id: i.city, label: `${i.city} ${i.confirmed}`, shape: 'circle', color: i.confirmed > 5000 ? '#964eba' : i.confirmed > 1000 ? '#ba4e66' : i.confirmed > 500 ? '#f00' : i.confirmed > 100 ? 'orange' : i.confirmed > 50 ? '#FFFF00' : i.confirmed === 0 ? '#fff' : '#fcfbd9' });}).concat([{id: 'Ohio', label: 'Ohio'}]) : [{id: 'Ohio', label: 'Ohio'}];
     const ohioEdges = ohioStats.length ? ohioStats.map(i => {return({ from: i.province, to: i.city });}) : [];
 
     const states = data && data.covid19Stats && data.covid19Stats.length ? [...new Set(data.covid19Stats.map(i => {return(i.province);}))] : [];
     const statesArray = states.map(i => {return({id: i, label: i});});
     const allNodes = data && data.covid19Stats && data.covid19Stats.length 
-      ? data.covid19Stats.map(i => {return({ id: i.keyId, label: `${i.city} ${i.confirmed}`, shape: 'circle', color: i.confirmed > 500 ? '#ba4e66' : i.confirmed > 100 ? '#f00' : i.confirmed > 50 ? '#FFFF00' : 'lightblue' });}).concat(statesArray) : [{id: 'Ohio', label: 'Ohio'}];
+      ? data.covid19Stats.map(i => {return({ id: i.keyId, label: `${i.city} ${i.confirmed}`, shape: 'circle', color: i.confirmed > 5000 ? '#964eba' : i.confirmed > 1000 ? '#ba4e66' : i.confirmed > 500 ? '#f00' : i.confirmed > 100 ? 'orange' : i.confirmed > 50 ? '#FFFF00' : i.confirmed === 0 ? '#fff' : '#fcfbd9' });}).concat(statesArray) : [{id: 'Ohio', label: 'Ohio'}];
     const allEdges = data && data.covid19Stats && data.covid19Stats.length 
       ? data.covid19Stats.map(i => {return({ from: i.province, to: i.keyId });}) : [];
     const dateUpdated = data && data.lastChecked 
