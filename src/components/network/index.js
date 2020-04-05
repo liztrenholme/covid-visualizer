@@ -13,7 +13,7 @@ import style from 'vis-network/styles/vis-network.css';
 // };
 
 class Network extends Component {
-
+  // eslint-disable-next-line no-unused-vars
   shouldComponentUpdate(nextProps, nextState) {
     return nextProps.nodes !== this.props.nodes;
   }
