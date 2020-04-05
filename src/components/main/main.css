@@ -60,6 +60,10 @@ select {
     border: solid 2px cadetblue;
 }
 @media only screen and (max-width: 800px) {
+    .main {
+        margin: .5em;
+        padding: 1em;
+    }
     .main-layout {
         display: grid;
         grid-template-columns: 100%;
