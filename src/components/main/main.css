@@ -70,4 +70,8 @@ select {
     .counties {
         text-align: left;
     }
+    .button-container {
+        flex-direction: column;
+        width: 10em;
+    }
 }
