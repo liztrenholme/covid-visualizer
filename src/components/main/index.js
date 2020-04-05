@@ -66,24 +66,25 @@ class Main extends Component {
     const allEdges = data && data.covid19Stats && data.covid19Stats.length 
       ? data.covid19Stats.map(i => {return({ from: i.province, to: `${i.keyId} city` });}) : [];
     const dateUpdated = data && data.lastChecked 
-      ? `${data.lastChecked.split('T')[0]}, ${data.lastChecked.split('T')[1].split('.')[0]}` : '';
+      ? `${data.lastChecked.split('T')[0]}, ${data.lastChecked.split('T')[1].split('.')[0]}` : 'fetching...';
     return (
       <div className="main">
-        <h1>Covid-19 Stats By County</h1><span>Updated: {dateUpdated}</span>
+        <h1>Covid-19 Confirmed Cases By County</h1><span>Updated: {dateUpdated}</span>
         <div className='button-container'>
           <div className={stateMode ? 'active-button button' : 'inactive-button button'}
             onClick={this.toggleMode}>
           State Mode
           </div>
-          <select className='inactive-button' onChange={this.clearViz} value={selectedState}>
-            {states && states.length ? states.map(i => {
-              return(
-                <option 
-                  key={i} 
-                  label={i}
-                  value={i}>{i}</option>
-              );}) : null}
-          </select>
+          {states && states.length ?
+            <select className='inactive-button' onChange={this.clearViz} value={selectedState}>
+              {states && states.length ? states.map(i => {
+                return(
+                  <option 
+                    key={i} 
+                    label={i}
+                    value={i}>{i}</option>
+                );}) : null}
+            </select> : null}
           <div className={nationalMode ? 'active-button button' : 'inactive-button button'}
             onClick={this.toggleMode}>
                 All States
@@ -92,6 +93,7 @@ class Main extends Component {
         <div className="main-layout">
           <div className="counties-container">
             <h2>{selectedState} Counties</h2>
+            <h4>Confirmed Cases</h4>
             <ul className="county-list">
               {stateStats.length ? 
                 stateStats.map(i => {return(<li key={i.city}>
@@ -121,6 +123,7 @@ class Main extends Component {
           graph 3d
         </div> */}
         </div>
+        <footer>Data source: Johns Hopkins University via RapidAPI</footer>
       </div>
     );
   }
