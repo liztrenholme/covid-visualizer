@@ -38,6 +38,9 @@ class Main extends Component {
         id: `${i.city} city`, 
         label: `${i.city} ${i.confirmed}`, 
         shape: 'circle',
+        shadow: true,
+        scaling: {min: 0, max: 100, label: {enabled: true}},
+        value: i.confirmed,
         color: i.confirmed > 5000 ? '#964eba' 
           : i.confirmed > 1000 ? '#ba4e66'
             : i.confirmed > 500 ? '#f00' 
@@ -55,7 +58,10 @@ class Main extends Component {
       ? data.covid19Stats.map(i => {return({ 
         id: `${i.keyId} city`, 
         label: `${i.city} ${i.confirmed}`, 
-        shape: 'circle', 
+        shape: 'circle',
+        shadow: true,
+        scaling: {min: 0, max: 100, label: {enabled: true}},
+        value: i.confirmed,
         color: i.confirmed > 5000 ? '#964eba' 
           : i.confirmed > 1000 ? '#ba4e66' 
             : i.confirmed > 500 ? '#f00' 
@@ -97,7 +103,11 @@ class Main extends Component {
             <ul className="county-list">
               {stateStats.length ? 
                 stateStats.map(i => {return(<li key={i.city}>
-                  <p className="counties" style={i.confirmed > 50 ? {color: 'red', fontWeight: 'bold'} : {}}>
+                  <p className="counties" style={{color: i.confirmed > 5000 ? '#964eba' 
+                    : i.confirmed > 1000 ? '#ba4e66'
+                      : i.confirmed > 500 ? '#f00' 
+                        : i.confirmed > 100 ? '#bd7115' 
+                          : i.confirmed > 50 ? '#ada61f' : '#000', fontWeight: 'bold'}}>
                     {i.city || i.province}: {i.confirmed}
                   </p>
                 </li>);}) : null}
