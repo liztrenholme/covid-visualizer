@@ -41,6 +41,7 @@ class Main extends Component {
         shadow: true,
         scaling: {min: 0, max: 100, label: {enabled: true}},
         value: i.confirmed,
+        hidden: i.city === 'Unassigned' && i.confirmed === 0,
         color: i.confirmed > 5000 ? '#964eba' 
           : i.confirmed > 1000 ? '#ba4e66'
             : i.confirmed > 500 ? '#f00' 
@@ -62,6 +63,7 @@ class Main extends Component {
         shadow: true,
         scaling: {min: 0, max: 100, label: {enabled: true}},
         value: i.confirmed,
+        hidden: i.city === 'Unassigned' && i.confirmed === 0,
         color: i.confirmed > 5000 ? '#964eba' 
           : i.confirmed > 1000 ? '#ba4e66' 
             : i.confirmed > 500 ? '#f00' 
