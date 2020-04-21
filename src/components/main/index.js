@@ -9,7 +9,8 @@ class Main extends Component {
     stateMode: true,
     nationalMode: false,
     selectedState: 'Ohio',
-    availableStates: []
+    availableStates: [],
+    anchored: []
   };
 
   async componentDidMount() {
@@ -26,11 +27,31 @@ class Main extends Component {
   chooseState = () => {
     this.setState({stateMode: true});
   }
+
+  // dragEnd = (node) => node.on('dragEnd', function (params) {
+  //   for (var i = 0; i < params.nodes.length; i++) {
+  //     var nodeId = params.nodes[i];
+  //     nodes.update({id: nodeId, fixed: {x: true, y: true}});
+  //   }
+  // });
+  // dragStart = (node) => node.on('dragStart', function(params) {
+  //   for (var i = 0; i < params.nodes.length; i++) {
+  //     nodes.update({id: nodeId, fixed: {x: false, y: false}});
+  //   }
+  // });
+  selectNode = (id) => () => {
+    console.log('getting called?');
+    const {anchored} = this.state;
+    anchored.push(id);
+    this.setState({anchored});
+  }
+
   toggleMode = () => this.state.stateMode 
     ? this.setState({stateMode: false, nationalMode: true}) 
     : this.setState({stateMode: true, nationalMode: false});
   render() {
-    const { data, nationalMode, stateMode, selectedState } = this.state;
+    const { data, nationalMode, stateMode, selectedState, anchored } = this.state;
+    console.log(anchored);
     const stateStats = data && data.covid19Stats && data.covid19Stats.length 
       ? data.covid19Stats.filter(i => i.province === selectedState) : [];
     const stateNodes = stateStats.length 
@@ -42,6 +63,9 @@ class Main extends Component {
         scaling: {min: 0, max: 100, label: {enabled: true}},
         value: i.confirmed,
         hidden: i.city === 'Unassigned' && i.confirmed === 0,
+        clickToUse: true,
+        fixed: anchored.includes(i.id) ? {x: true, y: true} : {x: false, y: false},
+        selectNode: this.selectNode,
         color: i.confirmed > 5000 ? '#964eba' 
           : i.confirmed > 1000 ? '#ba4e66'
             : i.confirmed > 500 ? '#f00' 
@@ -64,6 +88,8 @@ class Main extends Component {
         scaling: {min: 0, max: 100, label: {enabled: true}},
         value: i.confirmed,
         hidden: i.city === 'Unassigned' && i.confirmed === 0,
+        selectable: true,
+        
         color: i.confirmed > 5000 ? '#964eba' 
           : i.confirmed > 1000 ? '#ba4e66' 
             : i.confirmed > 500 ? '#f00' 
