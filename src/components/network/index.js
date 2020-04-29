@@ -32,19 +32,21 @@ class Network extends Component {
       color: 'skyblue'
     },
   };
-
-  // Graph.on('dragEnd', function (params) {
-  //   for (var i = 0; i < params.nodes.length; i++) {
-  //     var nodeId = params.nodes[i];
-  //     nodes.update({id: nodeId, fixed: {x: true, y: true}});
-  //   }
-  // });
-  // this.vis.on('dragStart', function(params) {
-  //   for (var i = 0; i < params.nodes.length; i++) {
-  //     var nodeId = params.nodes[i];
-  //     nodes.update({id: nodeId, fixed: {x: false, y: false}});
-  //   }
-  // });
+  events = {
+    select: function(event) {
+      var { nodes, edges } = event;
+      console.log(nodes, edges, event);
+    },
+    dragEnd: function(event) {
+      var { nodes, edges } = event;
+      console.log(nodes, edges, event, this.props);
+      // this.props.selectNode(nodes[0]);
+    },
+    doubleClick: function(event) {
+      var { nodes, edges } = event;
+      console.log(nodes, edges, event);
+    }
+  };
   
   render() {
     const { nodes, edges } = this.props;
@@ -56,7 +58,7 @@ class Network extends Component {
         <Graph
           graph={graph}
           options={this.options}
-          // events={this.events}
+          events={this.events}
           style={style}
           //   getNetwork={this.getNetwork}
           //   getEdges={this.getEdges}
@@ -72,6 +74,7 @@ Network.propTypes = {
   data: PropTypes.object,
   nodes: PropTypes.array,
   edges: PropTypes.array,
-  ohioMode: PropTypes.bool
+  ohioMode: PropTypes.bool,
+  selectNode: PropTypes.func
 };
 export default Network;

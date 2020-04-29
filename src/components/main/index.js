@@ -64,8 +64,17 @@ class Main extends Component {
         value: i.confirmed,
         hidden: i.city === 'Unassigned' && i.confirmed === 0,
         clickToUse: true,
+        // click: {
+        //   nodes: anchored,
+        //   // edges: [Array of selected edgeIds],
+        //   event: this.selectNode(i.id),
+        //   // pointer: {
+        //   //   // DOM: {x:pointer_x, y:pointer_y},
+        //   //   // canvas: {x:canvas_x, y:canvas_y}
+        //   // }
+        // },
         fixed: anchored.includes(i.id) ? {x: true, y: true} : {x: false, y: false},
-        selectNode: this.selectNode,
+        selectNode: this.selectNode(i.id),
         color: i.confirmed > 5000 ? '#964eba' 
           : i.confirmed > 1000 ? '#ba4e66'
             : i.confirmed > 500 ? '#f00' 
@@ -148,14 +157,16 @@ class Main extends Component {
                 data={data}
                 nodes={stateNodes}
                 edges={stateEdges}
-                ohioMode={stateMode} /> : null}
+                ohioMode={stateMode}
+                selectNode={this.selectNode} /> : null}
             {data && data.covid19Stats && data.covid19Stats.length
             && nationalMode && !stateMode
               ? <Network 
                 data={data}
                 nodes={allNodes}
                 edges={allEdges}
-                ohioMode={stateMode} /> : null}
+                ohioMode={stateMode}
+                selectNode={this.selectNode} /> : null}
           </div>
           {/* <div className="graph-3d">
           graph 3d
