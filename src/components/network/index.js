@@ -32,21 +32,21 @@ class Network extends Component {
       color: 'skyblue'
     },
   };
-  events = {
-    select: function(event) {
-      var { nodes, edges } = event;
-      console.log(nodes, edges, event);
-    },
-    dragEnd: function(event) {
-      var { nodes, edges } = event;
-      console.log(nodes, edges, event, this.props);
-      // this.props.selectNode(nodes[0]);
-    },
-    doubleClick: function(event) {
-      var { nodes, edges } = event;
-      console.log(nodes, edges, event);
-    }
-  };
+  // events = {
+  //   select: (event) => {
+  //     var { nodes, edges } = event;
+  //     console.log(nodes, edges, event);
+  //   },
+  //   dragEnd: (event) => {
+  //     var { nodes, edges } = event;
+  //     console.log(nodes, edges, event, this.props.selectNode);
+  //     this.props.selectNode(nodes);
+  //   },
+  //   doubleClick: (event) => {
+  //     var { nodes, edges } = event;
+  //     // console.log(nodes, edges, event);
+  //   }
+  // };
   
   render() {
     const { nodes, edges } = this.props;
@@ -58,7 +58,7 @@ class Network extends Component {
         <Graph
           graph={graph}
           options={this.options}
-          events={this.events}
+          events={this.props.events}
           style={style}
           //   getNetwork={this.getNetwork}
           //   getEdges={this.getEdges}

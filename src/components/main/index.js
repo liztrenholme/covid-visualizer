@@ -10,7 +10,8 @@ class Main extends Component {
     nationalMode: false,
     selectedState: 'Ohio',
     availableStates: [],
-    anchored: []
+    anchored: [],
+    updating: false
   };
 
   async componentDidMount() {
@@ -40,48 +41,70 @@ class Main extends Component {
   //   }
   // });
   selectNode = (id) => () => {
-    console.log('getting called?');
+    console.log('getting called?', id);
     const {anchored} = this.state;
     anchored.push(id);
-    this.setState({anchored});
+    console.log(anchored);
+    // this.setState({anchored});
   }
+
+  updateVis = () => this.setState({updating: true})
+
+  events = {
+    select: (event) => {
+      var { nodes, edges } = event;
+      console.log(nodes, edges, event);
+    },
+    dragEnd: (event) => {
+      var { nodes, edges, pointer } = event;
+      const temp = this.state.anchored;
+      temp.push({id: nodes[0], x: pointer.canvas.x, y: pointer.canvas.y});
+      console.log(temp, this.state.anchored);
+      this.updateVis();
+      this.setState({anchored: temp, updating: false});
+    },
+    doubleClick: (event) => {
+      var { nodes, edges } = event;
+      const temp = this.state.anchored;
+      // temp.push(nodes[0]);
+      console.log(temp, this.state.anchored);
+      // console.log(nodes, edges, event);
+    }
+  };
 
   toggleMode = () => this.state.stateMode 
     ? this.setState({stateMode: false, nationalMode: true}) 
     : this.setState({stateMode: true, nationalMode: false});
   render() {
-    const { data, nationalMode, stateMode, selectedState, anchored } = this.state;
+    const { data, nationalMode, stateMode, selectedState, anchored, updating } = this.state;
+    console.log('selected state', selectedState);
     console.log(anchored);
     const stateStats = data && data.covid19Stats && data.covid19Stats.length 
       ? data.covid19Stats.filter(i => i.province === selectedState) : [];
     const stateNodes = stateStats.length 
-      ? stateStats.map(i => {return({ 
-        id: `${i.city} city`, 
-        label: `${i.city} ${i.confirmed}`, 
-        shape: 'circle',
-        shadow: true,
-        scaling: {min: 0, max: 100, label: {enabled: true}},
-        value: i.confirmed,
-        hidden: i.city === 'Unassigned' && i.confirmed === 0,
-        clickToUse: true,
-        // click: {
-        //   nodes: anchored,
-        //   // edges: [Array of selected edgeIds],
-        //   event: this.selectNode(i.id),
-        //   // pointer: {
-        //   //   // DOM: {x:pointer_x, y:pointer_y},
-        //   //   // canvas: {x:canvas_x, y:canvas_y}
-        //   // }
-        // },
-        fixed: anchored.includes(i.id) ? {x: true, y: true} : {x: false, y: false},
-        selectNode: this.selectNode(i.id),
-        color: i.confirmed > 5000 ? '#964eba' 
-          : i.confirmed > 1000 ? '#ba4e66'
-            : i.confirmed > 500 ? '#f00' 
-              : i.confirmed > 100 ? 'orange' 
-                : i.confirmed > 50 ? '#FFFF00' 
-                  : i.confirmed === 0 ? '#fff' 
-                    : '#fcfbd9' });}).concat([{id: selectedState, label: selectedState}]) : []; //[{id: selectedState, label: selectedState}];
+      ? stateStats.map(i => { 
+        console.log(anchored.map(i => i.id).includes(`${i.city} city`), anchored.filter(j => j.id === `${i.city} city`)[0]); 
+        return({ 
+          id: `${i.city} city`, 
+          label: `${i.city} ${i.confirmed}`, 
+          shape: 'circle',
+          shadow: true,
+          scaling: {min: 0, max: 100, label: {enabled: true}},
+          value: i.confirmed,
+          hidden: i.city === 'Unassigned' && i.confirmed === 0,
+          clickToUse: true,
+          fixed: anchored.map(i => i.id).includes(`${i.city} city`) ? 
+          // {x: anchored.filter(j => j.id === `${i.city} city`)[0].x, y: anchored.filter(j => j.id === `${i.city} city`)[0].y} 
+            {x: 0, y: 0} 
+            : {x: false, y: false},
+          // selectNode: this.selectNode(i.id),
+          color: i.confirmed > 5000 ? '#964eba' 
+            : i.confirmed > 1000 ? '#ba4e66'
+              : i.confirmed > 500 ? '#f00' 
+                : i.confirmed > 100 ? 'orange' 
+                  : i.confirmed > 50 ? '#FFFF00' 
+                    : i.confirmed === 0 ? '#fff' 
+                      : '#fcfbd9' });}).concat([{id: selectedState, label: selectedState}]) : []; //[{id: selectedState, label: selectedState}];
     const stateEdges = stateStats.length ? stateStats.map(i => {return({ from: i.province, to: `${i.city} city` });}) : [];
 
     const states = data && data.covid19Stats && data.covid19Stats.length 
@@ -152,21 +175,23 @@ class Main extends Component {
           </div>
           <div className="visualizer">
             {data && data.covid19Stats && data.covid19Stats.length
-            && stateMode && !nationalMode
+            && stateMode && !nationalMode && !updating
               ? <Network 
                 data={data}
                 nodes={stateNodes}
                 edges={stateEdges}
                 ohioMode={stateMode}
-                selectNode={this.selectNode} /> : null}
+                selectNode={this.selectNode}
+                events={this.events} /> : null}
             {data && data.covid19Stats && data.covid19Stats.length
-            && nationalMode && !stateMode
+            && nationalMode && !stateMode && !updating
               ? <Network 
                 data={data}
                 nodes={allNodes}
                 edges={allEdges}
                 ohioMode={stateMode}
-                selectNode={this.selectNode} /> : null}
+                selectNode={this.selectNode}
+                events={this.events} /> : null}
           </div>
           {/* <div className="graph-3d">
           graph 3d
