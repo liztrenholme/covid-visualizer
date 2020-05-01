@@ -11,7 +11,8 @@ class Main extends Component {
     selectedState: 'Ohio',
     availableStates: [],
     anchored: [],
-    updating: false
+    updating: false,
+    animationEnabled: false
   };
 
   async componentDidMount() {
@@ -30,10 +31,8 @@ class Main extends Component {
   }
 
   selectNode = (id) => () => {
-    console.log('getting called?', id);
     const {anchored} = this.state;
     anchored.push(id);
-    console.log(anchored);
     // this.setState({anchored});
   }
 
@@ -46,12 +45,15 @@ class Main extends Component {
     dragEnd: (event) => {
       var { nodes, edges, pointer } = event;
       const temp = this.state.anchored;
+      if (nodes.length === 1 && edges.length > 1) {
+        return;
+      }
       temp.push({id: nodes[0], x: pointer.canvas.x, y: pointer.canvas.y});
       this.updateVis();
       this.setState({anchored: temp, updating: false});
     },
     doubleClick: (event) => {
-      var { nodes, edges } = event;
+      var { nodes } = event;
       const temp = this.state.anchored;
       const updated = temp.filter(node => node.id !== nodes[0]);
       this.updateVis();
@@ -59,32 +61,59 @@ class Main extends Component {
     }
   };
 
+  animationOn = {
+    barnesHut: {
+      enabled: true,
+      gravitationalConstant: -2000,
+      centralGravity: 0.1,
+      springLength: 95,
+      springConstant: 0.04,
+      damping: 0.09
+    },
+    repulsion: {
+      centralGravity: 0.1,
+      springLength: 50,
+      springConstant: 0.05,
+      nodeDistance: 100,
+      damping: 0.09
+    },
+    hierarchicalRepulsion: {
+      centralGravity: 0.5,
+      springLength: 150,
+      springConstant: 0.01,
+      nodeDistance: 60,
+      damping: 0.09
+    }
+  }
+  toggleAnimation = () => this.state.animationEnabled 
+    ? this.setState({animationEnabled: false}) : this.setState({animationEnabled: true})
+
   toggleMode = () => this.state.stateMode 
     ? this.setState({stateMode: false, nationalMode: true}) 
     : this.setState({stateMode: true, nationalMode: false});
   render() {
-    const { data, nationalMode, stateMode, selectedState, anchored, updating } = this.state;
+    const { data, nationalMode, stateMode, selectedState, anchored, updating, animationEnabled } = this.state;
     const stateStats = data && data.covid19Stats && data.covid19Stats.length 
       ? data.covid19Stats.filter(i => i.province === selectedState) : [];
     const stateNodes = stateStats.length 
       ? stateStats.map(i => {
         return({ 
-          id: `${i.city} city`, 
+          id: `${i.city} ${i.province}`, 
           label: `${i.city} ${i.confirmed}`, 
           shape: 'circle',
           shadow: true,
           scaling: {min: 0, max: 100, label: {enabled: true}},
           value: i.confirmed,
           hidden: i.city === 'Unassigned' && i.confirmed === 0,
-          fixed: anchored.map(i => i.id).includes(`${i.city} city`) ? 
+          fixed: anchored.map(i => i.id).includes(`${i.city} ${i.province}`) ? 
             {x: true, y: true} 
             : {x: false, y: false},
           selectNode: this.selectNode(i.id),
-          x: anchored.map(i => i.id).includes(`${i.city} city`) ? 
-            Math.ceil(anchored.filter(j => j.id === `${i.city} city`)[0].x)
+          x: anchored.map(i => i.id).includes(`${i.city} ${i.province}`) ? 
+            Math.ceil(anchored.filter(j => j.id === `${i.city} ${i.province}`)[0].x)
             : 0,
-          y: anchored.map(i => i.id).includes(`${i.city} city`) ? 
-            Math.ceil(anchored.filter(j => j.id === `${i.city} city`)[0].y)
+          y: anchored.map(i => i.id).includes(`${i.city} ${i.province}`) ? 
+            Math.ceil(anchored.filter(j => j.id === `${i.city} ${i.province}`)[0].y)
             : 0,
           color: i.confirmed > 5000 ? '#964eba' 
             : i.confirmed > 1000 ? '#ba4e66'
@@ -93,7 +122,7 @@ class Main extends Component {
                   : i.confirmed > 50 ? '#FFFF00' 
                     : i.confirmed === 0 ? '#fff' 
                       : '#fcfbd9' });}).concat([{id: selectedState, label: selectedState}]) : [];
-    const stateEdges = stateStats.length ? stateStats.map(i => {return({ from: i.province, to: `${i.city} city` });}) : [];
+    const stateEdges = stateStats.length ? stateStats.map(i => {return({ from: i.province, to: `${i.city} ${i.province}` });}) : [];
 
     const states = data && data.covid19Stats && data.covid19Stats.length 
       ? [...new Set(data.covid19Stats.map(i => {return(i.province);}))] : [];
@@ -101,7 +130,7 @@ class Main extends Component {
     const statesArray = states.map(i => {return({id: i, label: i});});
     const allNodes = data && data.covid19Stats && data.covid19Stats.length 
       ? data.covid19Stats.map(i => {return({ 
-        id: `${i.keyId} city`, 
+        id: `${i.keyId} ${i.province}`, 
         label: `${i.city} ${i.confirmed}`, 
         shape: 'circle',
         shadow: true,
@@ -109,16 +138,15 @@ class Main extends Component {
         value: i.confirmed,
         hidden: i.city === 'Unassigned' && i.confirmed === 0,
         selectable: true,
-        
         color: i.confirmed > 5000 ? '#964eba' 
           : i.confirmed > 1000 ? '#ba4e66' 
             : i.confirmed > 500 ? '#f00' 
               : i.confirmed > 100 ? 'orange' 
                 : i.confirmed > 50 ? '#FFFF00' 
                   : i.confirmed === 0 ? '#fff' 
-                    : '#fcfbd9' });}).concat(statesArray) : []; // [{id: 'Ohio', label: 'Ohio'}];
+                    : '#fcfbd9' });}).concat(statesArray) : [];
     const allEdges = data && data.covid19Stats && data.covid19Stats.length 
-      ? data.covid19Stats.map(i => {return({ from: i.province, to: `${i.keyId} city` });}) : [];
+      ? data.covid19Stats.map(i => {return({ from: i.province, to: `${i.keyId} ${i.province}` });}) : [];
     const dateUpdated = data && data.lastChecked 
       ? `${data.lastChecked.split('T')[0]}, ${data.lastChecked.split('T')[1].split('.')[0]}` : 'fetching...';
     return (
@@ -143,6 +171,11 @@ class Main extends Component {
             onClick={this.toggleMode}>
                 All States
           </div>
+          {!nationalMode && stateMode ?
+            <div className={animationEnabled ? 'active-button button' : 'inactive-button button'}
+              onClick={this.toggleAnimation}>
+              Animation {animationEnabled ? 'On' : 'Off'}
+            </div> : null}
         </div>
         <div className="main-layout">
           <div className="counties-container">
@@ -158,7 +191,8 @@ class Main extends Component {
                           : i.confirmed > 50 ? '#ada61f' : '#000', fontWeight: 'bold'}}>
                     {i.city || i.province}: {i.confirmed}
                   </p>
-                </li>);}) : null}
+                </li>);
+                }) : null}
             </ul>
           </div>
           <div className="visualizer">
@@ -170,7 +204,8 @@ class Main extends Component {
                 edges={stateEdges}
                 ohioMode={stateMode}
                 selectNode={this.selectNode}
-                events={this.events} /> : null}
+                events={this.events}
+                physics={animationEnabled ? this.physics : true} /> : null}
             {data && data.covid19Stats && data.covid19Stats.length
             && nationalMode && !stateMode && !updating
               ? <Network 
@@ -178,7 +213,8 @@ class Main extends Component {
                 nodes={allNodes}
                 edges={allEdges}
                 ohioMode={stateMode}
-                selectNode={this.selectNode} /> : null}
+                selectNode={this.selectNode}
+                physics={this.physics} /> : null}
           </div>
           {/* <div className="graph-3d">
           graph 3d

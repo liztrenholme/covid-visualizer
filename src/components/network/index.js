@@ -4,14 +4,6 @@ import Graph from 'vis-react';
 import './network.css';
 import style from 'vis-network/styles/vis-network.css';
  
-
- 
-// var events = {
-//   select: function(event) {
-//     var { nodes, edges } = event;
-//   }
-// };
-
 class Network extends Component {
   // eslint-disable-next-line no-unused-vars
   shouldComponentUpdate(nextProps, nextState) {
@@ -31,22 +23,8 @@ class Network extends Component {
     nodes: {
       color: 'skyblue'
     },
+    physics: this.props.physics
   };
-  // events = {
-  //   select: (event) => {
-  //     var { nodes, edges } = event;
-  //     console.log(nodes, edges, event);
-  //   },
-  //   dragEnd: (event) => {
-  //     var { nodes, edges } = event;
-  //     console.log(nodes, edges, event, this.props.selectNode);
-  //     this.props.selectNode(nodes);
-  //   },
-  //   doubleClick: (event) => {
-  //     var { nodes, edges } = event;
-  //     // console.log(nodes, edges, event);
-  //   }
-  // };
   
   render() {
     const { nodes, edges } = this.props;
@@ -76,6 +54,7 @@ Network.propTypes = {
   edges: PropTypes.array,
   ohioMode: PropTypes.bool,
   selectNode: PropTypes.func,
-  events: PropTypes.object
+  events: PropTypes.object,
+  physics: PropTypes.object
 };
 export default Network;
