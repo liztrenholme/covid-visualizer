@@ -15,7 +15,7 @@ import style from 'vis-network/styles/vis-network.css';
 class Network extends Component {
   // eslint-disable-next-line no-unused-vars
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.nodes !== this.props.nodes;
+    return nextProps.nodes.length !== this.props.nodes.length;
   }
 
   options = {
@@ -75,6 +75,7 @@ Network.propTypes = {
   nodes: PropTypes.array,
   edges: PropTypes.array,
   ohioMode: PropTypes.bool,
-  selectNode: PropTypes.func
+  selectNode: PropTypes.func,
+  events: PropTypes.object
 };
 export default Network;

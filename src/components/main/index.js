@@ -29,17 +29,6 @@ class Main extends Component {
     this.setState({stateMode: true});
   }
 
-  // dragEnd = (node) => node.on('dragEnd', function (params) {
-  //   for (var i = 0; i < params.nodes.length; i++) {
-  //     var nodeId = params.nodes[i];
-  //     nodes.update({id: nodeId, fixed: {x: true, y: true}});
-  //   }
-  // });
-  // dragStart = (node) => node.on('dragStart', function(params) {
-  //   for (var i = 0; i < params.nodes.length; i++) {
-  //     nodes.update({id: nodeId, fixed: {x: false, y: false}});
-  //   }
-  // });
   selectNode = (id) => () => {
     console.log('getting called?', id);
     const {anchored} = this.state;
@@ -51,24 +40,22 @@ class Main extends Component {
   updateVis = () => this.setState({updating: true})
 
   events = {
-    select: (event) => {
-      var { nodes, edges } = event;
-      console.log(nodes, edges, event);
-    },
+    // select: (event) => {
+    //   var { nodes, edges } = event;
+    // },
     dragEnd: (event) => {
       var { nodes, edges, pointer } = event;
       const temp = this.state.anchored;
       temp.push({id: nodes[0], x: pointer.canvas.x, y: pointer.canvas.y});
-      console.log(temp, this.state.anchored);
       this.updateVis();
       this.setState({anchored: temp, updating: false});
     },
     doubleClick: (event) => {
       var { nodes, edges } = event;
       const temp = this.state.anchored;
-      // temp.push(nodes[0]);
-      console.log(temp, this.state.anchored);
-      // console.log(nodes, edges, event);
+      const updated = temp.filter(node => node.id !== nodes[0]);
+      this.updateVis();
+      this.setState({anchored: updated, updating: false});
     }
   };
 
@@ -77,13 +64,10 @@ class Main extends Component {
     : this.setState({stateMode: true, nationalMode: false});
   render() {
     const { data, nationalMode, stateMode, selectedState, anchored, updating } = this.state;
-    console.log('selected state', selectedState);
-    console.log(anchored);
     const stateStats = data && data.covid19Stats && data.covid19Stats.length 
       ? data.covid19Stats.filter(i => i.province === selectedState) : [];
     const stateNodes = stateStats.length 
-      ? stateStats.map(i => { 
-        console.log(anchored.map(i => i.id).includes(`${i.city} city`), anchored.filter(j => j.id === `${i.city} city`)[0]); 
+      ? stateStats.map(i => {
         return({ 
           id: `${i.city} city`, 
           label: `${i.city} ${i.confirmed}`, 
@@ -92,19 +76,23 @@ class Main extends Component {
           scaling: {min: 0, max: 100, label: {enabled: true}},
           value: i.confirmed,
           hidden: i.city === 'Unassigned' && i.confirmed === 0,
-          clickToUse: true,
           fixed: anchored.map(i => i.id).includes(`${i.city} city`) ? 
-          // {x: anchored.filter(j => j.id === `${i.city} city`)[0].x, y: anchored.filter(j => j.id === `${i.city} city`)[0].y} 
-            {x: 0, y: 0} 
+            {x: true, y: true} 
             : {x: false, y: false},
-          // selectNode: this.selectNode(i.id),
+          selectNode: this.selectNode(i.id),
+          x: anchored.map(i => i.id).includes(`${i.city} city`) ? 
+            Math.ceil(anchored.filter(j => j.id === `${i.city} city`)[0].x)
+            : 0,
+          y: anchored.map(i => i.id).includes(`${i.city} city`) ? 
+            Math.ceil(anchored.filter(j => j.id === `${i.city} city`)[0].y)
+            : 0,
           color: i.confirmed > 5000 ? '#964eba' 
             : i.confirmed > 1000 ? '#ba4e66'
               : i.confirmed > 500 ? '#f00' 
                 : i.confirmed > 100 ? 'orange' 
                   : i.confirmed > 50 ? '#FFFF00' 
                     : i.confirmed === 0 ? '#fff' 
-                      : '#fcfbd9' });}).concat([{id: selectedState, label: selectedState}]) : []; //[{id: selectedState, label: selectedState}];
+                      : '#fcfbd9' });}).concat([{id: selectedState, label: selectedState}]) : [];
     const stateEdges = stateStats.length ? stateStats.map(i => {return({ from: i.province, to: `${i.city} city` });}) : [];
 
     const states = data && data.covid19Stats && data.covid19Stats.length 
@@ -190,8 +178,7 @@ class Main extends Component {
                 nodes={allNodes}
                 edges={allEdges}
                 ohioMode={stateMode}
-                selectNode={this.selectNode}
-                events={this.events} /> : null}
+                selectNode={this.selectNode} /> : null}
           </div>
           {/* <div className="graph-3d">
           graph 3d
