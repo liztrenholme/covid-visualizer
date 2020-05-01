@@ -42,6 +42,15 @@ class Main extends Component {
     // select: (event) => {
     //   var { nodes, edges } = event;
     // },
+    dragStart: (event) => {
+      console.log('when do I get called?');
+      var { nodes } = event;
+      const temp = this.state.anchored;
+      const updated = temp.filter(node => node.id !== nodes[0]);
+      console.log(updated);
+      // this.updateVis();
+      this.setState({anchored: updated});
+    },
     dragEnd: (event) => {
       var { nodes, edges, pointer } = event;
       const temp = this.state.anchored;
@@ -61,29 +70,30 @@ class Main extends Component {
     }
   };
 
+
   animationOn = {
-    barnesHut: {
-      enabled: true,
-      gravitationalConstant: -2000,
-      centralGravity: 0.1,
-      springLength: 95,
-      springConstant: 0.04,
-      damping: 0.09
-    },
+    // barnesHut: false,//{
+    //   enabled: true,
+    //   gravitationalConstant: 0, //-2000,
+    //   centralGravity: 0, //0.1,
+    //   springLength: 2, //95,
+    //   springConstant: 0, //0.04,
+    //   damping: 0.09
+    // },
     repulsion: {
-      centralGravity: 0.1,
-      springLength: 50,
-      springConstant: 0.05,
-      nodeDistance: 100,
-      damping: 0.09
+      centralGravity: 100, //0.1,
+      springLength: 2, //50,
+      springConstant: 0, //0.05,
+      nodeDistance: 400,
+      damping: 0.3 //0.09
     },
-    hierarchicalRepulsion: {
-      centralGravity: 0.5,
-      springLength: 150,
-      springConstant: 0.01,
-      nodeDistance: 60,
-      damping: 0.09
-    }
+    // hierarchicalRepulsion: {
+    //   centralGravity: 0.5,
+    //   springLength: 150,
+    //   springConstant: 0.01,
+    //   nodeDistance: 60,
+    //   damping: 0.09
+    // }
   }
   toggleAnimation = () => this.state.animationEnabled 
     ? this.setState({animationEnabled: false}) : this.setState({animationEnabled: true})
@@ -205,7 +215,7 @@ class Main extends Component {
                 ohioMode={stateMode}
                 selectNode={this.selectNode}
                 events={this.events}
-                physics={animationEnabled ? this.physics : true} /> : null}
+                physics={animationEnabled ? this.animationOn : true} /> : null}
             {data && data.covid19Stats && data.covid19Stats.length
             && nationalMode && !stateMode && !updating
               ? <Network 

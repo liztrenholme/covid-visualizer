@@ -31,6 +31,7 @@ class Network extends Component {
     const graph = {
       nodes: nodes, edges: edges
     };
+    console.log('what the heck is physics???', this.props.physics);
     return (
       <div className="network">
         <Graph
