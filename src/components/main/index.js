@@ -12,7 +12,7 @@ class Main extends Component {
     availableStates: [],
     anchored: [],
     updating: false,
-    animationEnabled: false
+    animationEnabled: true
   };
 
   async componentDidMount() {
@@ -43,12 +43,9 @@ class Main extends Component {
     //   var { nodes, edges } = event;
     // },
     dragStart: (event) => {
-      console.log('when do I get called?');
       var { nodes } = event;
       const temp = this.state.anchored;
       const updated = temp.filter(node => node.id !== nodes[0]);
-      console.log(updated);
-      // this.updateVis();
       this.setState({anchored: updated});
     },
     dragEnd: (event) => {
@@ -72,28 +69,15 @@ class Main extends Component {
 
 
   animationOn = {
-    // barnesHut: false,//{
-    //   enabled: true,
-    //   gravitationalConstant: 0, //-2000,
-    //   centralGravity: 0, //0.1,
-    //   springLength: 2, //95,
-    //   springConstant: 0, //0.04,
-    //   damping: 0.09
-    // },
-    repulsion: {
-      centralGravity: 100, //0.1,
-      springLength: 2, //50,
-      springConstant: 0, //0.05,
-      nodeDistance: 400,
-      damping: 0.3 //0.09
+    barnesHut: {
+      gravitationalConstant: -12000,
+      // centralGravity: 0.9,
+      springLength: 95,
+      springConstant: 0.04,
+      damping: 1,
+      // avoidOverlap: 0.04
     },
-    // hierarchicalRepulsion: {
-    //   centralGravity: 0.5,
-    //   springLength: 150,
-    //   springConstant: 0.01,
-    //   nodeDistance: 60,
-    //   damping: 0.09
-    // }
+    minVelocity: 0.07
   }
   toggleAnimation = () => this.state.animationEnabled 
     ? this.setState({animationEnabled: false}) : this.setState({animationEnabled: true})
@@ -109,7 +93,7 @@ class Main extends Component {
       ? stateStats.map(i => {
         return({ 
           id: `${i.city} ${i.province}`, 
-          label: `${i.city} ${i.confirmed}`, 
+          label: `${i.city || ''} ${i.confirmed}`, 
           shape: 'circle',
           shadow: true,
           scaling: {min: 0, max: 100, label: {enabled: true}},
@@ -132,7 +116,7 @@ class Main extends Component {
                   : i.confirmed > 50 ? '#FFFF00' 
                     : i.confirmed === 0 ? '#fff' 
                       : '#fcfbd9' });}).concat([{id: selectedState, label: selectedState}]) : [];
-    const stateEdges = stateStats.length ? stateStats.map(i => {return({ from: i.province, to: `${i.city} ${i.province}` });}) : [];
+    const stateEdges = stateStats.length ? stateStats.map(i => {return({ from: i.province, to: `${i.city} ${i.province}`, hidden: i.city === 'Unassigned' && i.confirmed === 0, });}) : [];
 
     const states = data && data.covid19Stats && data.covid19Stats.length 
       ? [...new Set(data.covid19Stats.map(i => {return(i.province);}))] : [];
@@ -141,7 +125,7 @@ class Main extends Component {
     const allNodes = data && data.covid19Stats && data.covid19Stats.length 
       ? data.covid19Stats.map(i => {return({ 
         id: `${i.keyId} ${i.province}`, 
-        label: `${i.city} ${i.confirmed}`, 
+        label: `${i.city || ''} ${i.confirmed}`, 
         shape: 'circle',
         shadow: true,
         scaling: {min: 0, max: 100, label: {enabled: true}},
@@ -224,7 +208,7 @@ class Main extends Component {
                 edges={allEdges}
                 ohioMode={stateMode}
                 selectNode={this.selectNode}
-                physics={this.physics} /> : null}
+                physics={this.animationEnabled} /> : null}
           </div>
           {/* <div className="graph-3d">
           graph 3d

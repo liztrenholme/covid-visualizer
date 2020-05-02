@@ -18,11 +18,15 @@ class Network extends Component {
     edges: {
       color: '#000000'
     },
-    interaction: { hoverEdges: true },
+    interaction: { 
+      hoverEdges: true,
+      navigationButtons: true
+    },
     height: '800px',
     nodes: {
       color: 'skyblue'
     },
+    // configure: true,
     physics: this.props.physics
   };
   
@@ -31,7 +35,6 @@ class Network extends Component {
     const graph = {
       nodes: nodes, edges: edges
     };
-    console.log('what the heck is physics???', this.props.physics);
     return (
       <div className="network">
         <Graph
