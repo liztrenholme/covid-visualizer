@@ -117,7 +117,10 @@ class Main extends Component {
                     : i.confirmed === 0 ? '#fff' 
                       : '#fcfbd9' });}).concat([{id: selectedState, label: selectedState}]) : [];
     const stateEdges = stateStats.length ? stateStats.map(i => {return({ from: i.province, to: `${i.city} ${i.province}`, hidden: i.city === 'Unassigned' && i.confirmed === 0, });}) : [];
-
+    let totalCases = 0;
+    let totalDeaths = 0;
+    stateStats.forEach(i => totalCases = totalCases + i.confirmed);
+    stateStats.forEach(i => totalDeaths = totalDeaths + i.deaths);
     const states = data && data.covid19Stats && data.covid19Stats.length 
       ? [...new Set(data.covid19Stats.map(i => {return(i.province);}))] : [];
     states.sort();
@@ -175,6 +178,9 @@ class Main extends Component {
           <div className="counties-container">
             <h2>{selectedState} Counties</h2>
             <h4>Confirmed Cases</h4>
+            Total: {totalCases || 'Not available'}
+            <br />
+            Deaths: {totalDeaths || 'Not available'}
             <ul className="county-list">
               {stateStats.length ? 
                 stateStats.map(i => {return(<li key={i.city}>
