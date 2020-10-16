@@ -23,7 +23,7 @@ li {
 .counties-container {
     /* width: 12em; */
     border-radius: 15px;
-    border: solid 2px cadetblue;
+    border: solid 2px rgb(12, 21, 71);
 }
 .graph-3d {
     height: 80em;
@@ -35,19 +35,19 @@ li {
     margin: 1em auto;
 }
 .active-button {
-    background-color: cadetblue; 
+    background-color: rgb(12, 21, 71); 
     color: white;
     /* padding: .5em; */
 }
 .inactive-button {
     background-color: white;
-    color: cadetblue;
+    color: rgb(12, 21, 71);
     /* padding: .5em; */
 }
 .button {
     width: 8em;
     border-radius: 15px;
-    border: solid 2px cadetblue;
+    border: solid 2px rgb(12, 21, 71);
     font-size: 1em;
     text-align: center;
     margin: .5em;
@@ -57,7 +57,7 @@ select {
     padding: .2em;
     font-size: 1em;
     border-radius: 5px;
-    border: solid 2px cadetblue;
+    border: solid 2px rgb(12, 21, 71);
 }
 @media only screen and (max-width: 800px) {
     .main {
