@@ -13,7 +13,7 @@ li {
 }
 .county-list {
     /* width: 10em; */
-    height: 43em;
+    height: 36em;
     overflow: scroll;
     padding: .5em 1em .5em .5em;
 }

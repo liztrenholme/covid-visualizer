@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { bool, object } from 'prop-types';
 import Graph from 'vis-react';
 import './network.css';
 import style from 'vis-network/styles/vis-network.css';
@@ -59,6 +59,6 @@ Network.propTypes = {
   ohioMode: PropTypes.bool,
   selectNode: PropTypes.func,
   events: PropTypes.object,
-  physics: PropTypes.object
+  physics: PropTypes.oneOfType([object, bool])
 };
 export default Network;

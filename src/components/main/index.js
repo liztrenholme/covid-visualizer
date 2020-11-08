@@ -83,7 +83,7 @@ class Main extends Component {
     ? this.setState({animationEnabled: false}) : this.setState({animationEnabled: true})
 
   toggleMode = () => this.state.stateMode 
-    ? this.setState({stateMode: false, nationalMode: true}) 
+    ? this.setState({stateMode: false, nationalMode: true})
     : this.setState({stateMode: true, nationalMode: false});
   render() {
     const { data, nationalMode, stateMode, selectedState, anchored, updating, animationEnabled } = this.state;
