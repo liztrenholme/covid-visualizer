@@ -1,1 +1,1 @@
-This will use visJS to show data on covid-19 in the USA.
+COVID-19 cases by county per state in the USA, using visJS.
