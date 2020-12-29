@@ -145,10 +145,10 @@ class Main extends Component {
     const allEdges = data && data.covid19Stats && data.covid19Stats.length 
       ? data.covid19Stats.map(i => {return({ from: i.province, to: `${i.keyId} ${i.province}` });}) : [];
     const dateUpdated = data && data.lastChecked 
-      ? `${data.lastChecked.split('T')[0]}, ${data.lastChecked.split('T')[1].split('.')[0]}` : 'fetching...';
+      ? `${data.lastChecked.split('T')[0]}, ${data.lastChecked.split('T')[1].split('.')[0]}` : <div className='lds-hourglass' />;
     return (
       <div className="main">
-        <h1>Covid-19 Confirmed Cases By County</h1><span>Updated: {dateUpdated}</span>
+        <h1>Covid-19 Confirmed Cases By County</h1><span>Last updated: {dateUpdated}</span>
         <div className='button-container'>
           <div className={stateMode ? 'active-button button' : 'inactive-button button'}
             onClick={this.toggleMode}>

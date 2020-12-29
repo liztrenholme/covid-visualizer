@@ -3,47 +3,57 @@
     padding: 2em;
     background-color: #fff;
 }
+
 .main-layout {
     display: grid;
     grid-template-columns: 15% 85%;
     width: 100%;
 }
+
 li {
     list-style: none;
 }
+
 .county-list {
     /* width: 10em; */
     height: 36em;
     overflow: scroll;
     padding: .5em 1em .5em .5em;
 }
+
 .counties {
     text-align: end;
 }
+
 .counties-container {
     /* width: 12em; */
     border-radius: 15px;
     border: solid 2px rgb(12, 21, 71);
 }
+
 .graph-3d {
     height: 80em;
 }
+
 .button-container {
     display: flex;
     flex-direction: row;
     width: 30em;
     margin: 1em auto;
 }
+
 .active-button {
-    background-color: rgb(12, 21, 71); 
+    background-color: rgb(12, 21, 71);
     color: white;
     /* padding: .5em; */
 }
+
 .inactive-button {
     background-color: white;
     color: rgb(12, 21, 71);
     /* padding: .5em; */
 }
+
 .button {
     width: 8em;
     border-radius: 15px;
@@ -53,12 +63,48 @@ li {
     margin: .5em;
     padding: .5em;
 }
+
 select {
     padding: .2em;
     font-size: 1em;
     border-radius: 5px;
     border: solid 2px rgb(12, 21, 71);
 }
+
+.lds-hourglass {
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    height: 30px;
+}
+
+.lds-hourglass:after {
+    content: " ";
+    display: block;
+    border-radius: 50%;
+    width: 0;
+    height: 0;
+    margin: 8px;
+    box-sizing: border-box;
+    border: 15px solid rgb(12, 21, 71);
+    border-color: rgb(12, 21, 71) transparent rgb(12, 21, 71) transparent;
+    animation: lds-hourglass 1.2s infinite;
+}
+
+@keyframes lds-hourglass {
+    0% {
+        transform: rotate(0);
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    }
+    50% {
+        transform: rotate(900deg);
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    100% {
+        transform: rotate(1800deg);
+    }
+}
+
 @media only screen and (max-width: 800px) {
     .main {
         margin: .5em;
